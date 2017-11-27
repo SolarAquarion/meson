@@ -1563,6 +1563,24 @@ int main(int argc, char **argv) {
         cargs = ['-I' + incdir.as_posix()]
         self.assertEqual(foo_dep.get_compile_args(), cargs)
 
+    def opt_has(self, name, value):
+        res = self.introspect('--buildoptions')
+        found = False
+        for i in res:
+            if i['name'] == name:
+                self.assertEqual(i['value'], value)
+                found = True
+                break
+        self.assertTrue(found, "Array option not found in introspect data.")
+
+    def test_stringarray_setting(self):
+        testdir = os.path.join(self.common_test_dir, '47 options')
+        self.init(testdir)
+        self.opt_has('array_opt', ['one', 'two'])
+        self.setconf('-Darray_opt=foo,bar', will_build=False)
+        self.opt_has('array_opt', ['foo', 'bar'])
+        self.setconf("-Darray_opt=['a,b', 'c,d']", will_build=False)
+        self.opt_has('array_opt', ['a,b', 'c,d'])
 
 class FailureTests(BasePlatformTests):
     '''

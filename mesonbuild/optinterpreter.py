@@ -84,9 +84,14 @@ def ComboParser(name, description, kwargs):
             raise OptionException('Combo choice elements must be strings.')
     return coredata.UserComboOption(name, description, choices, kwargs.get('value', choices[0]))
 
+@permitted_kwargs({'value'})
+def StringArrayParser(name, description, kwargs):
+    return coredata.UserStringArrayOption(name, description, kwargs.get('value', ''))
+
 option_types = {'string': StringParser,
                 'boolean': BooleanParser,
                 'combo': ComboParser,
+                'stringarray': StringArrayParser,
                 }
 
 class OptionInterpreter:

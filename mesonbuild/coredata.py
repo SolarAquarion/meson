@@ -131,9 +131,10 @@ class UserStringArrayOption(UserOption):
 
     def validate(self, value):
         if isinstance(value, str):
-            if not value.startswith('['):
-                raise MesonException('Valuestring does not define an array: ' + value)
-            newvalue = ast.literal_eval(value)
+            if value.startswith('['):
+                newvalue = ast.literal_eval(value)
+            else:
+                newvalue = value.split(',')
         else:
             newvalue = value
         if not isinstance(newvalue, list):
